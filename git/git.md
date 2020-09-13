@@ -25,3 +25,18 @@ cat id_rsa.pub
 git merge 解决冲突后：git commit -m ""//不用加文件名
 ```
 
+### 3.基本流程
+
+```nginx
+// address 仓库名
+git clone address
+// 查看别名
+git remote -v 
+// 创建别名 name：别名
+git remote add name address
+// 推送
+git push name master
+git pull name master
+
+```
+
