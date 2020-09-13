@@ -17,7 +17,7 @@ cat id_rsa.pub
 
 ![image-20200913210535545](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200913210535545.png)
 
-![https://github.com/pavi-du/note/blob/master/git.png?raw=true)
+![git](https://github.com/pavi-du/note/blob/master/git.png)
 
 ### 2.merge后
 
