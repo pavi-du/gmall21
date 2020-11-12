@@ -1,3 +1,151 @@
+### LinkedList源码分析
+
+```java
+ transient Node<E> first; // 头指针
+
+    /**
+     * Pointer to last node.
+     * Invariant: (first == null && last == null) ||
+     *            (last.next == null && last.item != null)
+     */
+ transient Node<E> last; // 尾指针
+```
+
+```java
+public boolean add(E e) {
+        linkLast(e);
+        return true;
+ }
+
+/**
+     * Links e as last element.
+     */
+    void linkLast(E e) {
+        final Node<E> l = last;
+        // 构造器：把当前节点的prev指针指向尾节点
+        final Node<E> newNode = new Node<>(l, e, null);
+        last = newNode;
+        if (l == null)
+            first = newNode;
+        else
+            l.next = newNode;
+        size++;
+        modCount++;
+    }
+
+
+```
+
+构造添加的Node节点，当前节点的prev指针指向尾节点，判断尾指针是否为null,如果为null则把头指针指向新的节点，否则把尾节点指向next指针指向当前节点。
+
+白话：构造添加的节点，添加在尾部即可。
+
+
+
+```java
+public void add(int index, E element) {
+    	// 对索引进行判断，索引不能小于0，不能大于size
+        checkPositionIndex(index);
+    
+		// 如果索引等于size，则添加在尾部即可
+        if (index == size)
+            linkLast(element);
+        else
+            linkBefore(element, node(index));
+}
+```
+
+```java
+ void linkBefore(E e, Node<E> succ) {
+        // assert succ != null;
+        final Node<E> pred = succ.prev;
+     	// 
+        final Node<E> newNode = new Node<>(pred, e, succ);
+        succ.prev = newNode;
+        if (pred == null)
+            first = newNode;
+        else
+            pred.next = newNode;
+        size++;
+        modCount++;
+    }
+```
+
+找到index位置的节点，创建插入的节点，插入节点next指针指向index位置的节点，prev指针指向index位置节点的前驱节点，该前驱节点指向next指针指向新添加的节点。
+
+白话：索引的判断，不能小于0，不能大于size,索引是否等于size,等于就添加在尾部即可，否则找到index位置的节点，插入即可。
+
+
+
+```java
+public E get(int index) {
+    checkElementIndex(index);
+    return node(index).item;
+}
+```
+
+```java
+Node<E> node(int index) {
+    // assert isElementIndex(index);
+    if (index < (size >> 1)) {
+        Node<E> x = first;
+        for (int i = 0; i < index; i++)
+            x = x.next;
+        return x;
+    } else {
+        Node<E> x = last;
+        for (int i = size - 1; i > index; i--)
+            x = x.prev;
+        return x;
+    }
+}
+```
+
+索引的检查，看索引如果在链表的左边，就在左边开始遍历，否则从右边开始遍历。
+
+
+
+
+
+```java
+public E remove(int index) {
+        checkElementIndex(index);
+        return unlink(node(index));
+}
+```
+
+```java
+E unlink(Node<E> x) {
+    // assert x != null;
+    final E element = x.item;
+    final Node<E> next = x.next;
+    final Node<E> prev = x.prev;
+
+    if (prev == null) {
+        first = next;
+    } else {
+        prev.next = next;
+        x.prev = null;
+    }
+
+    if (next == null) {
+        last = prev;
+    } else {
+        next.prev = prev;
+        x.next = null;
+    }
+
+    x.item = null;
+    size--;
+    modCount++;
+    return element;
+}
+```
+
+索引的检查，通过node方法找到需要删除的节点，删除即可。
+
+
+
 ### 锁
 
 #### ReentrackLock
